@@ -38,6 +38,7 @@ function ShowStatsPage({ statement }) {
   const balanceData = transactions.map((t) => ({
     date: t.bookingDate,
     balance: parseFloat(t.availableBalance),
+    description: t.description, // <-- add this line
   }));
 
   // Category breakdown for debits (expenses)
