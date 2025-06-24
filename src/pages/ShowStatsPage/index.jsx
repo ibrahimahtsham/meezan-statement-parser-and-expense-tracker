@@ -3,6 +3,8 @@ import AccountInfoCard from "./components/AccountInfoCard";
 import SummaryCard from "./components/SummaryCard";
 import BalanceChartCard from "./components/BalanceChartCard";
 import sumAmounts from "./utils/sumAmounts";
+import categorizeTransaction from "./utils/categorizeTransaction";
+import CategoryBreakdownCard from "./components/CategoryBreakdownCard";
 
 function ShowStatsPage({ statement }) {
   if (!statement) {
@@ -34,6 +36,16 @@ function ShowStatsPage({ statement }) {
     balance: parseFloat(t.availableBalance),
   }));
 
+  // Category breakdown for debits (expenses)
+  const categoryBreakdown = {};
+  transactions.forEach((t) => {
+    if (t.debit && parseFloat(t.debit) > 0) {
+      const category = categorizeTransaction(t.description);
+      categoryBreakdown[category] =
+        (categoryBreakdown[category] || 0) + parseFloat(t.debit);
+    }
+  });
+
   return (
     <Box sx={{ p: { xs: 2, sm: 4 } }}>
       <Typography variant="h4" gutterBottom>
@@ -51,6 +63,7 @@ function ShowStatsPage({ statement }) {
         totalCredits={totalCredits}
         numTransactions={numTransactions}
       />
+      <CategoryBreakdownCard breakdown={categoryBreakdown} />
       <BalanceChartCard balanceData={balanceData} />
     </Box>
   );
