@@ -1,11 +1,13 @@
-import { Card, CardContent, Typography, useTheme } from "@mui/material";
+import { Card, CardContent, Typography, useTheme, Slider } from "@mui/material";
 import CalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import { useState } from "react";
 
 function SpendingHeatmapCard({ dailySpending }) {
   const theme = useTheme();
+  const [containerWidth, setContainerWidth] = useState(600); // default width
   const values = Object.entries(dailySpending).map(([date, count]) => ({
     date,
     count,
@@ -49,19 +51,40 @@ function SpendingHeatmapCard({ dailySpending }) {
         <Typography variant="h6" gutterBottom>
           Spending Heatmap
         </Typography>
-        <CalendarHeatmap
-          startDate={values[0]?.date}
-          endDate={values[values.length - 1]?.date}
-          values={values}
-          classForValue={(value) => {
-            if (!value || value.count === 0) return "color-empty";
-            // 4 levels of color
-            const level = Math.ceil((value.count / max) * 4);
-            return `color-scale-${level}`;
-          }}
-          tooltipDataAttrs={tooltipDataAttrs}
-          showWeekdayLabels={true}
-        />
+        {/* Slider for container width */}
+        <div style={{ marginBottom: 16 }}>
+          <Typography variant="caption" sx={{ mr: 2 }}>
+            Heatmap Width
+          </Typography>
+          <Slider
+            value={containerWidth}
+            min={300}
+            max={1200}
+            step={10}
+            onChange={(_, v) => setContainerWidth(v)}
+            valueLabelDisplay="auto"
+            sx={{
+              width: 200,
+              display: "inline-block",
+              verticalAlign: "middle",
+            }}
+          />
+        </div>
+        <div style={{ width: containerWidth, overflowX: "auto" }}>
+          <CalendarHeatmap
+            startDate={values[0]?.date}
+            endDate={values[values.length - 1]?.date}
+            values={values}
+            classForValue={(value) => {
+              if (!value || value.count === 0) return "color-empty";
+              // 4 levels of color
+              const level = Math.ceil((value.count / max) * 4);
+              return `color-scale-${level}`;
+            }}
+            tooltipDataAttrs={tooltipDataAttrs}
+            showWeekdayLabels={true}
+          />
+        </div>
         <Tooltip id={tooltipId} />
         {/* Legend */}
         <div style={{ display: "flex", alignItems: "center", marginTop: 16 }}>
