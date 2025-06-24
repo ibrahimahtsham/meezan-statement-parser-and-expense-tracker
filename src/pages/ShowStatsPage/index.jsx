@@ -4,7 +4,6 @@ import SummaryCard from "./components/SummaryCard";
 import BalanceChartCard from "./components/BalanceChartCard";
 import sumAmounts from "./utils/sumAmounts";
 
-// ...existing code...
 function ShowStatsPage({ statement }) {
   if (!statement) {
     return (
