@@ -9,6 +9,7 @@ import {
 import UploadCSVPage from "./pages/UploadCSVPage";
 import ShowStatsPage from "./pages/ShowStatsPage";
 import Navbar from "./components/Navbar";
+import MergeStatementsPage from "./pages/MergeStatementsPage/index.jsx";
 
 function App() {
   const [mode, setMode] = useState("dark");
@@ -44,6 +45,7 @@ function App() {
             path="/stats"
             element={<ShowStatsPage statement={statement} />}
           />
+          <Route path="/merge" element={<MergeStatementsPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

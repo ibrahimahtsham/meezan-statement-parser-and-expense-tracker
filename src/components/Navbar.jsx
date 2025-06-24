@@ -35,6 +35,13 @@ function Navbar({ mode, setMode }) {
         >
           Show Stats
         </Button>
+        <Button
+          color={location.pathname === "/merge" ? "primary" : "inherit"}
+          component={RouterLink}
+          to="/merge"
+        >
+          Merge Statements
+        </Button>
         <Tooltip title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}>
           <IconButton color="inherit" onClick={toggleMode}>
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
