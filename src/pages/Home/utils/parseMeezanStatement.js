@@ -4,11 +4,22 @@ export function parseMeezanStatement(workbook) {
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: false });
 
+  // Helper to extract currency and amount
+  function parseBalance(cell) {
+    if (!cell) return { currency: "", amount: "" };
+    const match = cell.match(/^([A-Za-z]+)\s+([\d,]+\.\d{2})$/);
+    if (match) {
+      return { currency: match[1], amount: match[2] };
+    }
+    return { currency: "", amount: cell };
+  }
+
   // Extract header info
   const accountNumber = rows[0]?.[0]?.replace(/[^\d]/g, "") || "";
   const accountHolder = rows[0]?.[1] || "";
-  const openingBalance = rows[1]?.[2]?.trim() || "";
-  const closingBalance = rows[2]?.[2]?.trim() || "";
+
+  const opening = parseBalance(rows[1]?.[1]);
+  const closing = parseBalance(rows[2]?.[1]);
   const currency = rows[3]?.[1] || "";
 
   // Find the index of the transaction table header
@@ -33,8 +44,10 @@ export function parseMeezanStatement(workbook) {
   return {
     accountNumber,
     accountHolder,
-    openingBalance,
-    closingBalance,
+    openingBalance: opening.amount,
+    openingCurrency: opening.currency,
+    closingBalance: closing.amount,
+    closingCurrency: closing.currency,
     currency,
     transactions,
   };

@@ -1,20 +1,10 @@
 import { useState } from "react";
-import {
-  Container,
-  Typography,
-  Button,
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
+import { Container, Typography, Button, Box } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import * as XLSX from "xlsx";
 import { parseMeezanStatement } from "./utils/parseMeezanStatement";
+import TransactionsDataGrid from "./components/TransactionsDataGrid";
+import { formatAmount } from "./utils/formatAmount";
 
 function Home() {
   const [fileName, setFileName] = useState("");
@@ -33,6 +23,12 @@ function Home() {
       setStatement(parsed);
     };
     reader.readAsArrayBuffer(file);
+  };
+
+  const handleLogJson = () => {
+    if (statement) {
+      console.log(JSON.stringify(statement, null, 2));
+    }
   };
 
   return (
@@ -65,40 +61,24 @@ function Home() {
           <Typography variant="h6">Account Info</Typography>
           <Typography>Account Number: {statement.accountNumber}</Typography>
           <Typography>Account Holder: {statement.accountHolder}</Typography>
-          <Typography>Opening Balance: {statement.openingBalance}</Typography>
-          <Typography>Closing Balance: {statement.closingBalance}</Typography>
+          <Typography>
+            Opening Balance: {statement.openingCurrency}{" "}
+            {formatAmount(statement.openingBalance)}
+          </Typography>
+          <Typography>
+            Closing Balance: {statement.closingCurrency}{" "}
+            {formatAmount(statement.closingBalance)}
+          </Typography>
           <Typography>Currency: {statement.currency}</Typography>
-          <Typography variant="h6" sx={{ mt: 2 }}>
+          <Box sx={{ mt: 2, mb: 2 }}>
+            <Button variant="outlined" onClick={handleLogJson}>
+              Log JSON
+            </Button>
+          </Box>
+          <Typography variant="h6" sx={{ mb: 1 }}>
             Transactions
           </Typography>
-          <TableContainer component={Paper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Booking Date</TableCell>
-                  <TableCell>Value Date</TableCell>
-                  <TableCell>Doc No</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Debit</TableCell>
-                  <TableCell>Credit</TableCell>
-                  <TableCell>Available Balance</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {statement.transactions.map((tx, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell>{tx.bookingDate}</TableCell>
-                    <TableCell>{tx.valueDate}</TableCell>
-                    <TableCell>{tx.docNo}</TableCell>
-                    <TableCell>{tx.description}</TableCell>
-                    <TableCell>{tx.debit}</TableCell>
-                    <TableCell>{tx.credit}</TableCell>
-                    <TableCell>{tx.availableBalance}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <TransactionsDataGrid transactions={statement.transactions} />
         </Box>
       )}
     </Container>
