@@ -10,12 +10,14 @@ function SummaryCard({ totalDebits, totalCredits, numTransactions }) {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
           <Typography variant="body2">
-            <strong>Total Payments:</strong> {formatPKRAmount(totalDebits)}
+            <strong>Total Payments (Debits):</strong>{" "}
+            {formatPKRAmount(totalDebits)}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={4}>
           <Typography variant="body2">
-            <strong>Total Earnings:</strong> {formatPKRAmount(totalCredits)}
+            <strong>Total Income (Credits):</strong>{" "}
+            {formatPKRAmount(totalCredits)}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={4}>
