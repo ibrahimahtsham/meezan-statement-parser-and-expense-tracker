@@ -4,6 +4,7 @@ import { useState } from "react";
 
 function TransactionsDataGrid({ transactions }) {
   const [filteredRows, setFilteredRows] = useState(transactions);
+  const [searchTerm, setSearchTerm] = useState(""); // <-- Add search state
 
   const parseDate = (dateStr) => {
     // Handles "06 Mar 2023" -> Date object
@@ -162,6 +163,24 @@ function TransactionsDataGrid({ transactions }) {
       )
     );
 
+  // Search handler
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (!value) {
+      setFilteredRows(transactions);
+      return;
+    }
+
+    const lower = value.toLowerCase();
+    setFilteredRows(
+      transactions.filter((tx) =>
+        Object.values(tx).join(" ").toLowerCase().includes(lower)
+      )
+    );
+  };
+
   return (
     <Box sx={{ height: 500, width: "100%" }}>
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
@@ -178,6 +197,13 @@ function TransactionsDataGrid({ transactions }) {
           InputProps={{ readOnly: true }}
           size="small"
           sx={{ width: 180 }}
+        />
+        <TextField
+          label="Search"
+          value={searchTerm}
+          onChange={handleSearch}
+          size="small"
+          sx={{ width: 250 }}
         />
       </Stack>
       <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
