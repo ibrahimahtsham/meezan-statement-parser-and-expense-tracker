@@ -23,6 +23,10 @@ export default function InstructionsCollapse({ show, setShow }) {
           download a separate CSV file for each year (Meezan only lets you
           download a CSV for a limit of one year at a time).
           <br />
+          For each year, make sure to select the full date range:{" "}
+          <b>1st January to 31st December</b> when exporting your statement from
+          Meezan Internet Banking.
+          <br />
           Download a CSV for each year you want to include, then upload all
           those files here. This page will stitch them together into a single
           CSV file that you can use for further analysis.
