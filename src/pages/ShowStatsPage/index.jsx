@@ -81,8 +81,8 @@ function ShowStatsPage({ statement }) {
 
   const monthlyStats = {};
   transactions.forEach((t) => {
-    const [mon, year] = t.bookingDate.split(" ");
-    const monthKey = `${mon} ${year}`;
+    // Use the full bookingDate as the key (assumes format "DD MMM YYYY")
+    const monthKey = t.bookingDate;
     if (!monthlyStats[monthKey]) {
       monthlyStats[monthKey] = { debit: 0, credit: 0 };
     }
