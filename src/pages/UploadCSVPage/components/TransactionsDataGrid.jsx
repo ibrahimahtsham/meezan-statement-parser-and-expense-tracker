@@ -5,10 +5,56 @@ import { useState } from "react";
 function TransactionsDataGrid({ transactions }) {
   const [filteredRows, setFilteredRows] = useState(transactions);
 
+  const parseDate = (dateStr) => {
+    // Handles "06 Mar 2023" -> Date object
+    if (!dateStr) return null;
+    const [day, monthStr, year] = dateStr.split(" ");
+    const month = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ].indexOf(monthStr);
+    if (month === -1) return null;
+    return new Date(Number(year), month, Number(day));
+  };
+
   const columns = [
     { field: "id", headerName: "#", width: 60 },
-    { field: "bookingDate", headerName: "Booking Date", width: 120 },
-    { field: "valueDate", headerName: "Value Date", width: 120 },
+    {
+      field: "bookingDate",
+      headerName: "Booking Date",
+      width: 120,
+      sortComparator: (v1, v2) => {
+        const d1 = parseDate(v1);
+        const d2 = parseDate(v2);
+        if (!d1 && !d2) return 0;
+        if (!d1) return -1;
+        if (!d2) return 1;
+        return d1 - d2;
+      },
+    },
+    {
+      field: "valueDate",
+      headerName: "Value Date",
+      width: 120,
+      sortComparator: (v1, v2) => {
+        const d1 = parseDate(v1);
+        const d2 = parseDate(v2);
+        if (!d1 && !d2) return 0;
+        if (!d1) return -1;
+        if (!d2) return 1;
+        return d1 - d2;
+      },
+    },
     { field: "description", headerName: "Description", flex: 1, minWidth: 300 },
     {
       field: "debit",
