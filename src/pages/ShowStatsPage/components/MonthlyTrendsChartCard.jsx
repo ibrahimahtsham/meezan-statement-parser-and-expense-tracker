@@ -12,11 +12,6 @@ import {
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 function MonthlyTrendsChartCard({ labels, debits, credits }) {
-  // log labels, debits, and credits to ensure they are passed correctly
-  console.log("Labels:", labels);
-  console.log("Debits:", debits);
-  console.log("Credits:", credits);
-
   const data = {
     labels,
     datasets: [
