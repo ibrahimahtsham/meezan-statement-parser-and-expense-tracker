@@ -34,9 +34,6 @@ function Home() {
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh", py: 4 }}>
       <Container maxWidth={false} sx={{ px: { xs: 1, sm: 3 }, width: "100%" }}>
         <Stack spacing={3}>
-          <Typography variant="h3" fontWeight={700} align="center" gutterBottom>
-            Meezan Statement Parser
-          </Typography>
           <FileUploadCard fileName={fileName} onFileChange={handleFileChange} />
           {statement && (
             <AccountInfoCard statement={statement} onLogJson={handleLogJson} />
