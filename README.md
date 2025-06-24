@@ -16,9 +16,30 @@ A web application to parse Meezan Bank CSV statement files and visualize your pe
 
 ## Screenshots
 
-<!-- Add screenshots of the app below. For example: -->
-<!-- ![Upload CSV Page](screenshots/upload-page.png) -->
-<!-- ![Statistics Dashboard](screenshots/stats-dashboard.png) -->
+### 1. Upload CSV Page
+
+![Upload CSV Page](https://github.com/user-attachments/assets/fe33f2c2-af9f-4154-b50c-f101805c6b9a)
+
+---
+
+### 2. Statistics Dashboard
+
+- **Expense Category Breakdown**
+
+  ![Expense Category Breakdown](https://github.com/user-attachments/assets/87b8f8b2-612e-4506-8dcc-6a592d637920)
+
+- **Balance Over Time**
+
+  ![Balance Over Time](https://github.com/user-attachments/assets/c027eca7-3a5f-4e0a-b381-47c2b0b190bb)
+
+- **Top 5 Expenses**
+
+  ![Top 5 Expenses](https://github.com/user-attachments/assets/f0c9e7f6-3a45-4f2f-98df-93fa79e0b6ee)
+
+- **Monthly Spending & Income**
+
+  ![Monthly Spending & Income](https://github.com/user-attachments/assets/5f9ffd8e-7b63-4551-a0f8-0311854be1f1)
+
 
 ## Getting Started
 
