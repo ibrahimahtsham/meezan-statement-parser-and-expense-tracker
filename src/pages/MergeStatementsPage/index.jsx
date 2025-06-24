@@ -6,15 +6,37 @@ import {
   Typography,
   Button,
   Alert,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import InstructionsCollapse from "./components/InstructionsCollapse";
 import { useMergeStatements } from "./hooks/useMergeStatements";
 import { mergeCsvFiles } from "./utils/mergeCsvFiles";
 
 function MergeStatementsPage() {
   const [showInstructions, setShowInstructions] = useState(false);
-  const { files, fileNames, merged, setMerged, handleFilesChange } =
+  const { files, fileNames, merged, setMerged, setFiles, setFileNames } =
     useMergeStatements();
+
+  // Only allow adding one file at a time
+  const handleFileAdd = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFiles((prev) => [...prev, file]);
+      setFileNames((prev) => [...prev, file.name]);
+    }
+    // Reset input so same file can be added again if needed
+    e.target.value = "";
+  };
+
+  // Remove a file from the list
+  const handleRemoveFile = (index) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+    setFileNames((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleMerge = async () => {
     const mergedCsv = await mergeCsvFiles(files);
@@ -31,22 +53,36 @@ function MergeStatementsPage() {
             setShow={setShowInstructions}
           />
           <Typography>
-            Select multiple Meezan CSV files (e.g. 2023, 2024, 2025) to merge
-            them into one.
+            Please add your Meezan CSV files <b>one by one</b>, starting from
+            the <b>oldest</b> statement (e.g. 2023) and ending with the{" "}
+            <b>newest</b> (e.g. 2025). The order you add them will be the order
+            they are merged.
           </Typography>
           <Button variant="contained" component="label">
-            Select CSV Files
-            <input
-              type="file"
-              accept=".csv"
-              multiple
-              hidden
-              onChange={handleFilesChange}
-            />
+            Add CSV File
+            <input type="file" accept=".csv" hidden onChange={handleFileAdd} />
           </Button>
           {fileNames.length > 0 && (
             <Alert severity="info">
-              Selected: <b>{fileNames.join(", ")}</b>
+              <b>Files to be merged (oldest to newest):</b>
+              <List dense>
+                {fileNames.map((name, idx) => (
+                  <ListItem
+                    key={name + idx}
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleRemoveFile(idx)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemText primary={name} />
+                  </ListItem>
+                ))}
+              </List>
             </Alert>
           )}
           <Button
