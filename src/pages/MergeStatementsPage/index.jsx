@@ -6,46 +6,18 @@ import {
   Typography,
   Button,
   Alert,
-  Collapse,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import InstructionsCollapse from "./components/InstructionsCollapse";
+import { useMergeStatements } from "./hooks/useMergeStatements";
+import { mergeCsvFiles } from "./utils/mergeCsvFiles";
 
 function MergeStatementsPage() {
-  const [files, setFiles] = useState([]);
-  const [fileNames, setFileNames] = useState([]);
-  const [merged, setMerged] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
-
-  const handleFilesChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    setFiles(selectedFiles);
-    setFileNames(selectedFiles.map((f) => f.name));
-    setMerged(null);
-  };
+  const { files, fileNames, merged, setMerged, handleFilesChange } =
+    useMergeStatements();
 
   const handleMerge = async () => {
-    // Read all files as text
-    const texts = await Promise.all(
-      files.map(
-        (file) =>
-          new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (evt) => resolve(evt.target.result);
-            reader.readAsText(file);
-          })
-      )
-    );
-    // Naive merge: just concatenate all CSVs, skipping headers after the first
-    let mergedCsv = "";
-    texts.forEach((text, idx) => {
-      const lines = text.split(/\r?\n/).filter(Boolean);
-      if (idx === 0) {
-        mergedCsv += lines.join("\n");
-      } else {
-        mergedCsv += "\n" + lines.slice(1).join("\n");
-      }
-    });
+    const mergedCsv = await mergeCsvFiles(files);
     setMerged(mergedCsv);
   };
 
@@ -54,31 +26,10 @@ function MergeStatementsPage() {
       <Container maxWidth={false} sx={{ px: { xs: 1, sm: 3 }, width: "100%" }}>
         <Stack spacing={3}>
           <Typography variant="h4">Merge Statements</Typography>
-          <Button
-            variant="text"
-            startIcon={
-              showInstructions ? <ExpandLessIcon /> : <ExpandMoreIcon />
-            }
-            onClick={() => setShowInstructions((prev) => !prev)}
-            sx={{ alignSelf: "flex-start" }}
-          >
-            {showInstructions
-              ? "Hide instructions"
-              : "Show instructions on how to use this page"}
-          </Button>
-          <Collapse in={showInstructions}>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              <strong>How to use this page:</strong>
-              <br />
-              If you have data for more than a year on Meezan, you will need to
-              download a separate CSV file for each year (Meezan only lets you
-              download a CSV for a limit of one year at a time).
-              <br />
-              Download a CSV for each year you want to include, then upload all
-              those files here. This page will stitch them together into a
-              single CSV file that you can use for further analysis.
-            </Typography>
-          </Collapse>
+          <InstructionsCollapse
+            show={showInstructions}
+            setShow={setShowInstructions}
+          />
           <Typography>
             Select multiple Meezan CSV files (e.g. 2023, 2024, 2025) to merge
             them into one.
