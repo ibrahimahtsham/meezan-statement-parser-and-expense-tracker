@@ -16,12 +16,11 @@ function Home() {
 
     const reader = new FileReader();
     reader.onload = (evt) => {
-      const data = new Uint8Array(evt.target.result);
-      const workbook = XLSX.read(data, { type: "array" });
-      const parsed = parseMeezanStatement(workbook);
+      const csvText = evt.target.result;
+      const parsed = parseMeezanStatement(csvText);
       setStatement(parsed);
     };
-    reader.readAsArrayBuffer(file);
+    reader.readAsText(file);
   };
 
   const handleLogJson = () => {
