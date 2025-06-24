@@ -1,5 +1,16 @@
 import { useState } from "react";
-import { Container, Typography, Button, Box } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Button,
+  Box,
+  Card,
+  CardContent,
+  Stack,
+  Divider,
+  Alert,
+  Paper,
+} from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import * as XLSX from "xlsx";
 import { parseMeezanStatement } from "./utils/parseMeezanStatement";
@@ -32,56 +43,91 @@ function Home() {
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Upload Meezan XLSX Statement
-      </Typography>
-      <Box>
-        <Button
-          variant="contained"
-          component="label"
-          startIcon={<UploadFileIcon />}
-        >
-          Select File
-          <input
-            type="file"
-            accept=".xlsx"
-            hidden
-            onChange={handleFileChange}
-          />
-        </Button>
-        {fileName && (
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            Selected: {fileName}
+    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", py: 4 }}>
+      <Container maxWidth={false} sx={{ px: { xs: 1, sm: 3 }, width: "100%" }}>
+        <Stack spacing={3}>
+          <Typography variant="h3" fontWeight={700} align="center" gutterBottom>
+            Meezan Statement Parser
           </Typography>
-        )}
-      </Box>
-      {statement && (
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h6">Account Info</Typography>
-          <Typography>Account Number: {statement.accountNumber}</Typography>
-          <Typography>Account Holder: {statement.accountHolder}</Typography>
-          <Typography>
-            Opening Balance: {statement.openingCurrency}{" "}
-            {formatAmount(statement.openingBalance)}
-          </Typography>
-          <Typography>
-            Closing Balance: {statement.closingCurrency}{" "}
-            {formatAmount(statement.closingBalance)}
-          </Typography>
-          <Typography>Currency: {statement.currency}</Typography>
-          <Box sx={{ mt: 2, mb: 2 }}>
-            <Button variant="outlined" onClick={handleLogJson}>
-              Log JSON
-            </Button>
-          </Box>
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            Transactions
-          </Typography>
-          <TransactionsDataGrid transactions={statement.transactions} />
-        </Box>
-      )}
-    </Container>
+          <Card elevation={3} sx={{ width: "100%" }}>
+            <CardContent>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={2}
+                alignItems="center"
+              >
+                <Button
+                  variant="contained"
+                  component="label"
+                  startIcon={<UploadFileIcon />}
+                  sx={{ minWidth: 160 }}
+                >
+                  Select File
+                  <input
+                    type="file"
+                    accept=".xlsx"
+                    hidden
+                    onChange={handleFileChange}
+                  />
+                </Button>
+                {fileName && (
+                  <Alert severity="info" sx={{ flex: 1 }}>
+                    Selected: <strong>{fileName}</strong>
+                  </Alert>
+                )}
+              </Stack>
+            </CardContent>
+          </Card>
+          {statement && (
+            <Paper
+              elevation={2}
+              sx={{ p: 3, width: "100%", overflowX: "auto" }}
+            >
+              <Typography variant="h6" gutterBottom>
+                Account Info
+              </Typography>
+              <Stack spacing={1} divider={<Divider flexItem />}>
+                <Typography>
+                  Account Number: <b>{statement.accountNumber}</b>
+                </Typography>
+                <Typography>
+                  Account Holder: <b>{statement.accountHolder}</b>
+                </Typography>
+                <Typography>
+                  Opening Balance:{" "}
+                  <b>
+                    {statement.openingCurrency}{" "}
+                    {formatAmount(statement.openingBalance)}
+                  </b>
+                </Typography>
+                <Typography>
+                  Closing Balance:{" "}
+                  <b>
+                    {statement.closingCurrency}{" "}
+                    {formatAmount(statement.closingBalance)}
+                  </b>
+                </Typography>
+                <Typography>
+                  Currency: <b>{statement.currency}</b>
+                </Typography>
+              </Stack>
+              <Box sx={{ mt: 2, mb: 2 }}>
+                <Button variant="outlined" onClick={handleLogJson}>
+                  Log JSON
+                </Button>
+              </Box>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                Transactions
+              </Typography>
+              <Box sx={{ width: "100%", minWidth: 900 }}>
+                <TransactionsDataGrid transactions={statement.transactions} />
+              </Box>
+            </Paper>
+          )}
+        </Stack>
+      </Container>
+    </Box>
   );
 }
 
