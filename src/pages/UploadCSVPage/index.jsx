@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Container, Typography, Box, Stack } from "@mui/material";
-import * as XLSX from "xlsx";
+import { Container, Box, Stack } from "@mui/material";
 import { parseMeezanStatement } from "./utils/parseMeezanStatement";
 import FileUploadCard from "./components/FileUploadCard";
 import AccountInfoCard from "./components/AccountInfoCard";
 
-function Home() {
+function UploadCSVPage() {
   const [fileName, setFileName] = useState("");
   const [statement, setStatement] = useState(null);
 
@@ -43,4 +42,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default UploadCSVPage;

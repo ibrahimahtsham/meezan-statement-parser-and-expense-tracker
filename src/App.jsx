@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
-import Home from "./pages/Home";
+import UploadCSVPage from "./pages/UploadCSVPage";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Navbar mode={mode} setMode={setMode} />
-      <Home />
+      <UploadCSVPage />
     </ThemeProvider>
   );
 }
