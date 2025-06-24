@@ -1,37 +1,22 @@
-import { Card, CardContent, Typography } from "@mui/material";
-import { Line } from "react-chartjs-2";
+import { Card, CardContent, Typography, useTheme } from "@mui/material";
 import {
-  Chart as ChartJS,
-  LineElement,
-  PointElement,
-  CategoryScale,
-  LinearScale,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
-  Legend,
-} from "chart.js";
+} from "recharts";
 
-ChartJS.register(
-  LineElement,
-  PointElement,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  Legend
-);
+function formatPKRAmount(value) {
+  return `PKR ${Number(value).toLocaleString(undefined, {
+    maximumFractionDigits: 2,
+  })}`;
+}
 
 function NetChangeChartCard({ netChangeData }) {
-  const data = {
-    labels: netChangeData.map((d) => d.date),
-    datasets: [
-      {
-        label: "Net Change (PKR)",
-        data: netChangeData.map((d) => d.net),
-        fill: false,
-        borderColor: "#1976d2",
-        tension: 0.2,
-      },
-    ],
-  };
+  const theme = useTheme();
 
   return (
     <Card sx={{ mt: 3 }}>
@@ -39,7 +24,37 @@ function NetChangeChartCard({ netChangeData }) {
         <Typography variant="h6" gutterBottom>
           Net Change Over Time
         </Typography>
-        <Line data={data} />
+        <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
+          This chart displays the cumulative net change in your account balance
+          over time, calculated as total credits minus total debits for each
+          day. It helps you visualize how your balance has increased or
+          decreased throughout the statement period.
+        </Typography>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={netChangeData}>
+            <CartesianGrid stroke={theme.palette.divider} />
+            <XAxis dataKey="date" stroke={theme.palette.text.primary} />
+            <YAxis
+              stroke={theme.palette.text.primary}
+              tickFormatter={formatPKRAmount}
+            />
+            <Tooltip
+              contentStyle={{
+                background: theme.palette.background.paper,
+                color: theme.palette.text.primary,
+                border: `1px solid ${theme.palette.divider}`,
+              }}
+              formatter={formatPKRAmount}
+            />
+            <Line
+              type="monotone"
+              dataKey="net"
+              stroke={theme.palette.primary.main}
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   );
