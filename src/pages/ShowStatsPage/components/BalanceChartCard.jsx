@@ -9,6 +9,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useTheme } from "@mui/material/styles";
+import { formatPKRAmount } from "../utils/formatPKRAmount";
 
 function BalanceChartCard({ balanceData }) {
   const theme = useTheme();
@@ -21,13 +22,17 @@ function BalanceChartCard({ balanceData }) {
         <LineChart data={balanceData}>
           <CartesianGrid stroke={theme.palette.divider} />
           <XAxis dataKey="date" stroke={theme.palette.text.primary} />
-          <YAxis stroke={theme.palette.text.primary} />
+          <YAxis
+            stroke={theme.palette.text.primary}
+            tickFormatter={formatPKRAmount}
+          />
           <Tooltip
             contentStyle={{
               background: theme.palette.background.paper,
               color: theme.palette.text.primary,
               border: `1px solid ${theme.palette.divider}`,
             }}
+            formatter={(value) => formatPKRAmount(value)}
           />
           <Line
             type="monotone"
