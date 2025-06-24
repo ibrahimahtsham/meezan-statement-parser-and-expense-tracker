@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+// Remove deprecated GridToolbar import
 import { DataGrid } from "@mui/x-data-grid";
 
 function TransactionsDataGrid({ transactions }) {
@@ -39,6 +40,7 @@ function TransactionsDataGrid({ transactions }) {
         rowsPerPageOptions={[10, 25, 50]}
         disableRowSelectionOnClick
         autoHeight={false}
+        showToolbar // Use the new prop to show the default toolbar
       />
     </Box>
   );
