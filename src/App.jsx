@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import Home from "./pages/Home";
-import Navbar from "./pages/Home/components/Navbar";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [mode, setMode] = useState("dark");
