@@ -7,12 +7,12 @@ import {
   Navigate,
 } from "react-router-dom";
 import UploadCSVPage from "./pages/UploadCSVPage";
-import ShowStatsPage from "./pages/ShowStatsPage"; // You'll create this file
+import ShowStatsPage from "./pages/ShowStatsPage";
 import Navbar from "./components/Navbar";
 
 function App() {
   const [mode, setMode] = useState("dark");
-  const [statement, setStatement] = useState(null); // LIFT STATE UP
+  const [statement, setStatement] = useState(null);
 
   const theme = useMemo(
     () =>
