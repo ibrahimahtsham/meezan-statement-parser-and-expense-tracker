@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Stack, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
 
@@ -84,16 +84,20 @@ function TransactionsDataGrid({ transactions }) {
       debit:
         tx.debit && tx.debit !== ""
           ? Number(tx.debit.toString().replace(/,/g, ""))
-          : undefined,
+          : 0,
       credit:
         tx.credit && tx.credit !== ""
           ? Number(tx.credit.toString().replace(/,/g, ""))
-          : undefined,
+          : 0,
       availableBalance:
         tx.availableBalance && tx.availableBalance !== ""
           ? Number(tx.availableBalance.toString().replace(/,/g, ""))
           : undefined,
     })) || [];
+
+  // Calculate totals
+  const totalDebit = rows.reduce((sum, row) => sum + (row.debit || 0), 0);
+  const totalCredit = rows.reduce((sum, row) => sum + (row.credit || 0), 0);
 
   // Filter handlers
   const handleShowAll = () => setFilteredRows(transactions);
@@ -125,9 +129,57 @@ function TransactionsDataGrid({ transactions }) {
           tx.description.toLowerCase().includes("atm cash withdrawal")
       )
     );
+  const handlePOS = () =>
+    setFilteredRows(
+      transactions.filter(
+        (tx) =>
+          tx.description &&
+          tx.description.toLowerCase().includes("pos transaction")
+      )
+    );
+  const handleFoodpanda = () =>
+    setFilteredRows(
+      transactions.filter(
+        (tx) =>
+          tx.description &&
+          (tx.description.toLowerCase().includes("food panda") ||
+            tx.description.toLowerCase().includes("foodpanda karachi pak"))
+      )
+    );
+  const handleBillPaid = () =>
+    setFilteredRows(
+      transactions.filter(
+        (tx) =>
+          tx.description && tx.description.toLowerCase().includes("bill paid")
+      )
+    );
+  const handleRaast = () =>
+    setFilteredRows(
+      transactions.filter(
+        (tx) =>
+          tx.description &&
+          tx.description.toLowerCase().includes("raast p2p fund transfer")
+      )
+    );
 
   return (
     <Box sx={{ height: 500, width: "100%" }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <TextField
+          label="Total Debit"
+          value={totalDebit.toLocaleString()}
+          InputProps={{ readOnly: true }}
+          size="small"
+          sx={{ width: 180 }}
+        />
+        <TextField
+          label="Total Credit"
+          value={totalCredit.toLocaleString()}
+          InputProps={{ readOnly: true }}
+          size="small"
+          sx={{ width: 180 }}
+        />
+      </Stack>
       <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
         <Button onClick={handleShowAll} variant="outlined">
           Show All
@@ -146,6 +198,18 @@ function TransactionsDataGrid({ transactions }) {
         </Button>
         <Button onClick={handleATM} variant="outlined">
           ATM Withdrawals
+        </Button>
+        <Button onClick={handlePOS} variant="outlined">
+          POS Purchases
+        </Button>
+        <Button onClick={handleFoodpanda} variant="outlined">
+          Foodpanda
+        </Button>
+        <Button onClick={handleBillPaid} variant="outlined">
+          Bill Paid
+        </Button>
+        <Button onClick={handleRaast} variant="outlined">
+          Raast Transfers
         </Button>
       </Stack>
       <DataGrid
