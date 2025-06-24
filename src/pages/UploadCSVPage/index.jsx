@@ -4,9 +4,8 @@ import { parseMeezanStatement } from "./utils/parseMeezanStatement";
 import FileUploadCard from "./components/FileUploadCard";
 import AccountInfoCard from "./components/AccountInfoCard";
 
-function UploadCSVPage() {
+function UploadCSVPage({ statement, setStatement }) {
   const [fileName, setFileName] = useState("");
-  const [statement, setStatement] = useState(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
