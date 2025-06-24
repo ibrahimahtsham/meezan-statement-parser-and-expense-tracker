@@ -1,8 +1,26 @@
+import { useMemo, useState } from "react";
+import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import Home from "./pages/Home";
+import Navbar from "./pages/Home/components/Navbar";
+
 function App() {
+  const [mode, setMode] = useState("dark");
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+      }),
+    [mode]
+  );
+
   return (
-    <>
-      <h1>test</h1>
-    </>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Navbar mode={mode} setMode={setMode} />
+      <Home />
+    </ThemeProvider>
   );
 }
 
