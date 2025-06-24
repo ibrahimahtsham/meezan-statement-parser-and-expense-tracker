@@ -1,4 +1,5 @@
 import * as XLSX from "xlsx";
+import { parseDate } from "./parseDate";
 
 export function parseMeezanStatement(workbook) {
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -32,8 +33,8 @@ export function parseMeezanStatement(workbook) {
   // Extract transactions
   const txRows = rows.slice(txHeaderIdx + 1).filter((row) => row.length > 1);
   const transactions = txRows.map((row) => ({
-    bookingDate: row[0],
-    valueDate: row[1],
+    bookingDate: parseDate(row[0]),
+    valueDate: parseDate(row[1]),
     docNo: row[2],
     description: row[3],
     debit: row[4],
