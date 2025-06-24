@@ -20,7 +20,7 @@ function CustomTooltip({ active, payload, label }) {
   useEffect(() => {
     if (active && payload && payload.length) {
       setShowFull(false);
-      timerRef.current = setTimeout(() => setShowFull(true), 2000);
+      timerRef.current = setTimeout(() => setShowFull(true), 3000);
     } else {
       setShowFull(false);
       clearTimeout(timerRef.current);
@@ -29,11 +29,22 @@ function CustomTooltip({ active, payload, label }) {
   }, [active, payload, label]);
 
   if (active && payload && payload.length) {
-    const { balance, description } = payload[0].payload;
+    const { balance, description, credit, debit } = payload[0].payload;
     const descToShow =
       !showFull && description && description.length > 30
         ? description.slice(0, 30) + "..."
         : description || "-";
+
+    let change = null;
+    let changeColor = "";
+    if (credit && parseFloat(credit) > 0) {
+      change = `+${formatPKRAmount(credit)}`;
+      changeColor = "success.main";
+    } else if (debit && parseFloat(debit) > 0) {
+      change = `-${formatPKRAmount(debit)}`;
+      changeColor = "error.main";
+    }
+
     return (
       <Paper sx={{ p: 1 }}>
         <Typography variant="body2">
@@ -42,6 +53,12 @@ function CustomTooltip({ active, payload, label }) {
         <Typography variant="body2">
           <b>Balance:</b> {formatPKRAmount(balance)}
         </Typography>
+        {change && (
+          <Typography variant="body2" sx={{ color: changeColor }}>
+            <b>{credit && parseFloat(credit) > 0 ? "Credit" : "Debit"}:</b>{" "}
+            {change}
+          </Typography>
+        )}
         <Typography variant="body2">
           <b>Description:</b> {descToShow}
         </Typography>
