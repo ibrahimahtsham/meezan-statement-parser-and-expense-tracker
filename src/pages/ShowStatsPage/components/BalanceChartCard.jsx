@@ -105,6 +105,39 @@ const months = [
   "Dec",
 ];
 
+// Helper to find indices where a new month starts
+function getMonthStartIndices(data) {
+  let lastMonth = null;
+  return data
+    .map((d, i) => {
+      const month = dayjs(d.date).month();
+      if (month !== lastMonth) {
+        lastMonth = month;
+        return i;
+      }
+      return null;
+    })
+    .filter((i) => i !== null);
+}
+
+// Custom dot component
+function MonthStartDot(props) {
+  const { cx, cy, index, monthStartIndices } = props;
+  if (monthStartIndices.includes(index)) {
+    return (
+      <circle
+        cx={cx}
+        cy={cy}
+        r={5}
+        fill="#1976d2"
+        stroke="#fff"
+        strokeWidth={2}
+      />
+    );
+  }
+  return null;
+}
+
 function BalanceChartCard({ balanceData }) {
   const theme = useTheme();
   const years = getYearsFromData(balanceData);
@@ -135,6 +168,9 @@ function BalanceChartCard({ balanceData }) {
       );
     }
   }
+
+  // Find indices where a new month starts
+  const monthStartIndices = getMonthStartIndices(filteredData);
 
   // Handlers
   const handleYearClick = (year) => {
@@ -240,7 +276,12 @@ function BalanceChartCard({ balanceData }) {
             dataKey="balance"
             stroke={theme.palette.primary.main}
             strokeWidth={2}
-            dot={false}
+            dot={(dotProps) => (
+              <MonthStartDot
+                {...dotProps}
+                monthStartIndices={monthStartIndices}
+              />
+            )}
           />
         </LineChart>
       </ResponsiveContainer>
